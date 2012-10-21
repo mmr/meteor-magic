@@ -1,0 +1,86 @@
+<head>
+  <title>MAPS Magic RtR Champs Pools!</title>
+</head>
+
+<body>
+  <div id="top-tag-filter">
+    {{> filter}}
+  </div>
+
+  <div id="main-pane">
+    {{> poolcards}}
+  </div>
+
+  <div id="side-pane">
+    {{> pools}}
+  </div>
+</body>
+
+<template name="pools">
+  <h3>MAPS Pools!</h3>
+  <div id="lists">
+    {{#each pools}}
+      <div class="list {{selected}}">
+          <div class="display">
+            <a class="list-name {{name_class}}" href="/{{_id}}">
+              {{name}}
+            </a>
+          </div>
+      </div>
+    {{/each}}
+  </div>
+</template>
+
+<template name="poolcards">
+  {{#if any_pool_selected}}
+    <div class="cards">
+      {{#each cards}}
+        {{> card}}
+      {{/each}}
+    </div>
+  {{/if}}
+</template>
+
+<template name="card">
+  <div class="card" style='background: url(http://magiccards.info/scans/en/rtr/{{card.img}}.jpg)'>
+    {{amount}}
+  </div>
+</template>
+
+<template name="filter">
+  <div id="tag-filter" class="tag-list">
+    <div class="label">Filtrar:</div>
+    <div id="types">
+    {{#each types}}
+      <div class="type {{selected_type}}">
+        {{text}} <span class="count">({{count}})</span>
+      </div>
+    {{/each}}
+    </div>
+
+    <div id="colors">
+    {{#each colors}}
+      <div class="color {{selected_color}}">
+        {{text}} <span class="count">({{count}})</span>
+      </div>
+    {{/each}}
+    </div>
+
+    <div id="rarities">
+    {{#each rarities}}
+      <div class="rarity {{selected_rarity}}">
+        {{text}} <span class="count">({{count}})</span>
+      </div>
+    {{/each}}
+    </div>
+
+    <div id="orderby" class="tag-list">
+      <div class="label">Ordenar:</div>
+    {{#each sorts}}
+      <div class="sort {{selected_sort}}">
+        {{text}}
+      </div>
+    {{/each}}
+    </div>
+  </div>
+</template>
