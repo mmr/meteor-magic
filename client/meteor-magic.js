@@ -63,6 +63,10 @@ Template.poolcards.show_img = function () {
     return Session.equals('show_img', true);
 };
 
+Template.poolcards.show_price = function () {
+    return Session.equals('show_price', true);
+};
+
 Template.poolcards.any_pool_selected = function () {
     return !Session.equals('pool_id', null);
 };
@@ -92,7 +96,6 @@ Template.poolcards.cards = function () {
     });
 
     var sort = Session.get("sort") || "A-Z";
-
 
     var sortByType = function (x) {
         return x.card.types[0];
@@ -135,6 +138,15 @@ Template.poolcards.cards = function () {
         func = function (x) { return x.card.price; };
     }
     cards = _.sortBy(cards, func);
+
+    cards.price = 0;
+    cards.amount = 0;
+    cards.forEach(function (x) {
+        cards.price += x.card.price * x.amount;
+        cards.amount += x.amount;
+    });
+    cards.price = cards.price.toFixed(2);
+
     return cards;
 };
 
@@ -142,7 +154,6 @@ Template.poolcards.cards = function () {
 var odd = true;
 Template.card.odd = function () {
     odd = !odd;
-    console.log(odd);
     return odd?"odd":"even";
 };
 Template.card.show_price = function () {

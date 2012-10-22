@@ -33,6 +33,13 @@
 
 <template name="poolcards">
   {{#if any_pool_selected}}
+    <div class="label">
+    {{cards.amount}} cartas 
+    {{#if show_price}}
+      (${{cards.price}})
+    {{/if}}
+    </div>
+
     {{#if show_img}}
     <div class="cards">
       {{#each cards}}
