@@ -33,17 +33,46 @@
 
 <template name="poolcards">
   {{#if any_pool_selected}}
+    {{#if show_img}}
     <div class="cards">
       {{#each cards}}
         {{> card}}
       {{/each}}
     </div>
+    {{else}}
+    <div id="items-view">
+      <ul id="item-list">
+        {{#each cards}}
+          {{> card}}
+        {{/each}}
+      {{/if}}
+      </ul>
+    </div>
   {{/if}}
 </template>
 
 <template name="card">
-  <div class="card" style='background: url(http://magiccards.info/scans/en/rtr/{{card.img}}.jpg)'>
-    {{amount}}
+  {{#if show_img}}
+    <div class="card" style='background: url(http://magiccards.info/scans/en/rtr/{{card.img}}.jpg)'>
+      {{amount}}
+      {{#if show_price}}
+          <span class="img_price">${{card.price}}</span>
+      {{/if}}
+    </div>
+  {{else}}
+    <li class="todo {{odd}}">
+      <div class="display">
+        <div class="todo-text">
+            ({{amount}}) 
+            {{card.name}} - {{card.types}} - {{card.cost}}
+
+            {{#if show_price}}
+                : ${{card.price}}
+            {{/if}}
+        </div>
+      </div>
+    </li>
+  {{/if}}
   </div>
 </template>
 
@@ -81,6 +110,12 @@
         {{text}}
       </div>
     {{/each}}
+    </div>
+
+    <div>
+      <div class="label">Mostrar:</div>
+      <input class="check show_price" id="show_price" type="checkbox" {{{checked_show_price}}} /> Preço
+      <input class="check show_img" id="show_img" type="checkbox" {{{checked_show_img}}} /> Imagem
     </div>
   </div>
 </template>

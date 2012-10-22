@@ -7,6 +7,18 @@ ul {
     list-style: none;
 }
 
+li {
+    list-style: none;
+}
+
+.odd {
+    background-color: #ccc;
+}
+
+.even {
+    background-color: #eee;
+}
+
 html, body {
     height: 100%;
 }
@@ -217,11 +229,6 @@ h3 {
     width: 300px;
     position: relative;
     top: -3px;
-}
-
-#item-list .done .todo-text {
-    text-decoration: line-through;
-    color: #999;
 }
 
 #item-list .todo:hover .destroy {

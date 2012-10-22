@@ -9,14 +9,6 @@ Cards = new Meteor.Collection("cards");
 Pools = new Meteor.Collection("pools");
 PoolCards = new Meteor.Collection("poolcards");
 
-/*
-Session.set("pool_id", null);
-Session.set("types", null);
-Session.set("colors", null);
-Session.set("rarities", null);
-Session.set("sort", null);
-*/
-
 CARDS = {};
 Meteor.subscribe('cards', function () {
     var cards = Cards.find().fetch();
@@ -67,9 +59,12 @@ Template.pools.name_class = function () {
 };
 
 ////////// Pool Cards //////////
+Template.poolcards.show_img = function () {
+    return Session.equals('show_img', true);
+};
 
 Template.poolcards.any_pool_selected = function () {
-  return !Session.equals('pool_id', null);
+    return !Session.equals('pool_id', null);
 };
 
 Template.poolcards.cards = function () {
@@ -136,12 +131,27 @@ Template.poolcards.cards = function () {
         func = sortByCost;
     } else if (sort === "Raridade") {
         func = sortByRarity;
+    } else if (sort === "Preço") {
+        func = function (x) { return x.card.price; };
     }
     cards = _.sortBy(cards, func);
     return cards;
 };
 
 ////////// Filters //////////
+var odd = true;
+Template.card.odd = function () {
+    odd = !odd;
+    console.log(odd);
+    return odd?"odd":"even";
+};
+Template.card.show_price = function () {
+    return Session.equals('show_price', true);
+};
+
+Template.card.show_img = function () {
+    return Session.equals('show_img', true);
+};
 Template.filter.types = function () {
     var types = [];
     var total_count = 0;
@@ -227,8 +237,27 @@ Template.filter.sorts = function () {
         {n: "Tipo"},
         {n: "Cor"},
         /*{n: "Custo"}, */
-        {n: "Raridade"}];
+        {n: "Raridade"},
+        {n: "Preço"}];
 };
+
+Template.filter.checked_show_price = function () {
+    return Session.get("show_price") ? 'checked="checked"' : '';
+};
+
+Template.filter.checked_show_img = function () {
+    return Session.get("show_img") ? 'checked="checked"' : '';
+};
+
+Template.filter.events({
+    'click #show_price': function (evt, tmpl) {
+        Session.set("show_price", tmpl.find("#show_price").checked);
+    },
+
+    'click #show_img': function (evt, tmpl) {
+        Session.set("show_img", tmpl.find("#show_img").checked);
+    },
+});
 
 Template.filter.sort_selected = function () {
     return Session.equals("sort", this.sort) ? 'selected' : '';
@@ -373,6 +402,8 @@ var PoolsRouter = Backbone.Router.extend({
     },
     main: function (pool_id) {
         Session.set("pool_id", pool_id);
+        Session.set("show_price", Session.get("show_price"));
+        Session.set("show_img", Session.get("show_img"));
         Session.set("types", Session.get("types"));
         Session.set("colors", Session.get("colors"));
         Session.set("rarities", Session.get("rarities"));
