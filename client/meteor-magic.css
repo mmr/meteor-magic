@@ -50,7 +50,11 @@ h3 {
     text-align: center;
 }
 
-#top-tag-filter, #main-pane, #side-pane, #bottom-pane {
+#top-filter {
+    padding-left: 10px;
+}
+
+#top-filter, #main-pane, #side-pane, #bottom-pane {
     position: absolute;
     left: 0;
     right: 0;
@@ -59,9 +63,9 @@ h3 {
     overflow: hidden;
 }
 
-#top-tag-filter {
-    left: 200px;
-    height: 88px;
+#top-filter {
+    left: 150px;
+    height: 120px;
     bottom: auto;
     overflow: auto;
     background: #ddd;
@@ -73,14 +77,14 @@ h3 {
 }
 
 #main-pane {
-    top: 89px;
+    top: 122px;
     bottom: 0;
-    left: 220px;
+    left: 150px;
     overflow: auto;
 }
 
 #side-pane {
-    width: 200px;
+    width: 150px;
     right: auto;
     overflow: auto;
     background: #eee;
@@ -88,9 +92,13 @@ h3 {
     background: #ddd;
 }
 
+.pool_summary {
+    padding-left: 42px;
+    font-weight: bold;
+}
+
 .type, .color, .rarity, .sort {
     cursor: pointer;
-    float: left;
     margin: 1px;
     padding: 2px 7px;
     font-size: 70%;
@@ -112,6 +120,29 @@ h3 {
     position: relative;
 }
 
+.selected {
+    background: #69d;
+}
+
+.inv_selected {
+    background: #d96;
+}
+
+.filter_label {
+    float: left;
+    font-weight: bold;
+    width: 80px;
+}
+
+#filter_filters {
+    width: 100%;
+}
+
+#filter_misc {
+    float: left;
+}
+
+/*
 #tag-filter .label {
     float: left;
     margin-top: 9px;
@@ -128,11 +159,16 @@ h3 {
     background: #69d;
 }
 
+#tag-filter .inv_selected {
+    background: #d96;
+}
+
 .count {
     font-weight: normal;
     padding-left: 2px;
 }
 
+/*
 #orderby {
     clear: both;    
 }
@@ -143,6 +179,7 @@ h3 {
     margin-left: 12px;
     margin-right: 8px;
 }
+*/
 
 #orderby .sort {
     margin-top: 10px;

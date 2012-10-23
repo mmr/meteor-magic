@@ -2117,9 +2117,26 @@ var pools = [{
   ]
 }];
 
+function calc_cmc(cost) {
+    var cmc = 0;
+    for (var i = 0; i < cost.length; i++) {
+        var c = cost[i]; 
+        if (c % 1 === 0) {
+            cmc += parseInt(c, 10);
+        }
+        if (c === "}") {
+            cmc--;
+        } else if (_.contains(["W", "U", "B", "R", "G"], c)) {
+            cmc++;
+        }
+    }
+    return cmc;
+}
+
 var card_map = {};
 for (var i = 0; i < cards.length; i++) {
     var c = cards[i];
+    c.cmc = calc_cmc(c.cost);
     card_map[c.name.toLowerCase()] = Cards.insert(c);
 }
 

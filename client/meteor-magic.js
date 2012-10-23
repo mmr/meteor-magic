@@ -95,55 +95,65 @@ Template.poolcards.cards = function () {
         }
     });
 
-    var sort = Session.get("sort") || "A-Z";
+    var sort = Session.get("sort");
 
-    var sortByType = function (x) {
-        return x.card.types[0];
-    };
-    var sortByRarity = function (x) {
-        var vs = [ "Common", "Uncommon", "Rare", "Mythic Rare" ];
-        for (var i = 0; i < vs.length; i++) {
-            if (vs[i] === x.card.rarity) {
-                return i;
-            }
-        }
-        return 0;
-    };
-    var sortByColor = function (x) {
-        var vs = [ "W", "U", "B", "R", "G", "I" ];
-        var ini = 0;
-        if (x.card.colors.length > 1) {
-            ini = 100;
-        }
-        for (var i = 0; i < vs.length; i++) {
-            if (vs[i] === x.card.colors[0]) {
-                return ini + i;
-            }
-        }
-        return 0;
-    };
+    inv = "";
+    if (sort && sort[0] === "-") {
+        sort = sort.substring(1);
+        inv = "-";
+    }
 
-    var func = null;
-    if (sort === "A-Z") {
-        func = function (x) { return x.card.name; };
-    } else if (sort === "Tipo") {
-        func = sortByType;
+    var func = function (x) { return x.card.name; };
+    if (sort === "Tipo") {
+        func = function (x) { return parseInt(inv + x.card.types[0].charCodeAt(0)); };
     } else if (sort === "Cor") {
-        func = sortByColor;
-    } else if (sort === "Custo") {
-        func = sortByCost;
+        func = function (x) {
+            var vs = [ "W", "U", "B", "R", "G", "I" ];
+            var ini = 0;
+            if (x.card.colors.length > 1) {
+                ini = 100;
+            }
+            for (var i = 0; i < vs.length; i++) {
+                if (vs[i] === x.card.colors[0]) {
+                    return parseInt(inv + (ini + i));
+                }
+            }
+            return 0;
+        };
     } else if (sort === "Raridade") {
-        func = sortByRarity;
+        func = function (x) {
+            var vs = [ "Common", "Uncommon", "Rare", "Mythic Rare" ];
+            for (var i = 0; i < vs.length; i++) {
+                if (vs[i] === x.card.rarity) {
+                    return parseInt(inv + i);
+                }
+            }
+            return 0;
+        };
     } else if (sort === "Preço") {
-        func = function (x) { return x.card.price; };
+        func = function (x) { return parseFloat(inv + x.card.price); };
+    } else if (sort === "Custo") {
+        func = function (x) { return parseInt(inv + x.card.cmc); };
     }
     cards = _.sortBy(cards, func);
 
+/*
+    total_price = 0;
+    total_amount = 0;
+    cards.forEach(function (x) {
+        total_price += x.card.price * x.amount;
+        total_amount += x.amount;
+    });
+    total_price = total_price.toFixed(2);
+*/
+
     cards.price = 0;
     cards.amount = 0;
+    var i = 0;
     cards.forEach(function (x) {
         cards.price += x.card.price * x.amount;
         cards.amount += x.amount;
+        x.i = i++;
     });
     cards.price = cards.price.toFixed(2);
 
@@ -151,10 +161,8 @@ Template.poolcards.cards = function () {
 };
 
 ////////// Filters //////////
-var odd = true;
 Template.card.odd = function () {
-    odd = !odd;
-    return odd?"odd":"even";
+    return this.i % 2 === 1 ?"odd":"even";
 };
 Template.card.show_price = function () {
     return Session.equals('show_price', true);
@@ -173,7 +181,7 @@ Template.filter.types = function () {
             var o = _.find(types, function (x) { return x.n === v });
             var type = _.find(types, function (x) { return x.n === v });
             if (type) {
-                type.count++;
+                type.count += ref.amount;
             } else {
                 types.push({n: v, count: 1});
             }
@@ -195,7 +203,7 @@ Template.filter.colors = function () {
             var o = _.find(colors, function (x) { return x.n === v });
             var type = _.find(colors, function (x) { return x.n === v });
             if (type) {
-                type.count++;
+                type.count += ref.amount;
             } else {
                 colors.push({n: v, count: 1});
             }
@@ -223,7 +231,7 @@ Template.filter.rarities = function () {
         var card = CARDS[ref.card_id];
         var rarity = _.find(rarities, function (x) { return x.n === card.rarity });
         if (rarity) {
-            rarity.count++;
+            rarity.count += ref.amount;
         } else {
             rarities.push({n: card.rarity, count: 1});
         }
@@ -244,10 +252,9 @@ Template.filter.rarities = function () {
 
 Template.filter.sorts = function () {
     return [
-        {n: "A-Z"},
         {n: "Tipo"},
         {n: "Cor"},
-        /*{n: "Custo"}, */
+        {n: "Custo"},
         {n: "Raridade"},
         {n: "Preço"}];
 };
@@ -269,10 +276,6 @@ Template.filter.events({
         Session.set("show_img", tmpl.find("#show_img").checked);
     },
 });
-
-Template.filter.sort_selected = function () {
-    return Session.equals("sort", this.sort) ? 'selected' : '';
-};
 
 Template.filter.text = function () {
     return this.n;
@@ -307,7 +310,14 @@ Template.filter.selected_rarity = function () {
 };
 
 Template.filter.selected_sort = function () {
-    return Session.equals('sort', this.n) ? 'selected' : '';
+    var s = Session.get('sort');
+    if (s === this.n) {
+        return 'selected';
+    } else if (s === "-" + this.n) {
+        return 'inv_selected';
+    } else {
+        return '';
+    }
 };
 
 Template.filter.events({
@@ -397,7 +407,10 @@ Template.filter.events({
     },
 
     "mousedown .sort": function () {
-        if (Session.equals("sort", this.n)) {
+        var s = Session.get("sort");
+        if (s === this.n) {
+            Session.set("sort", "-" + this.n);
+        } else if (s === "-" + this.n) {
             Session.set("sort", null);
         } else {
             Session.set("sort", this.n);

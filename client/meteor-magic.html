@@ -3,7 +3,7 @@
 </head>
 
 <body>
-  <div id="top-tag-filter">
+  <div id="top-filter">
     {{> filter}}
   </div>
 
@@ -33,8 +33,8 @@
 
 <template name="poolcards">
   {{#if any_pool_selected}}
-    <div class="label">
-    {{cards.amount}} cartas 
+    <div class="pool_summary">
+    {{cards.amount}} cartas
     {{#if show_price}}
       (${{cards.price}})
     {{/if}}
@@ -63,7 +63,7 @@
     <div class="card" style='background: url(http://magiccards.info/scans/en/rtr/{{card.img}}.jpg)'>
       {{amount}}
       {{#if show_price}}
-          <span class="img_price">${{card.price}}</span>
+        &times; ${{card.price}}
       {{/if}}
     </div>
   {{else}}
@@ -71,7 +71,7 @@
       <div class="display">
         <div class="todo-text">
             ({{amount}}) 
-            {{card.name}} - {{card.types}} - {{card.cost}}
+            {{card.name}} - {{card.rarity}} {{card.types}} - {{card.cost}}
 
             {{#if show_price}}
                 : ${{card.price}}
@@ -84,45 +84,60 @@
 </template>
 
 <template name="filter">
-  <div id="tag-filter" class="tag-list">
-    <div class="label">Filtrar:</div>
-    <div id="types">
-    {{#each types}}
-      <div class="type {{selected_type}}">
-        {{text}} <span class="count">({{count}})</span>
-      </div>
-    {{/each}}
-    </div>
+<div id="filter_filters">
+  <div id="filter_rarity">
+      <span class="filter_label">Raridade:</span>
+      <span class="filter_buttons">
+        {{#each rarities}}
+          <span class="rarity {{selected_rarity}}">
+            {{text}} <span class="count">({{count}})</span>
+          </span>
+        {{/each}}
+      </span>
+  </div>
 
-    <div id="colors">
+  <div id="filter_color">
+    <span class="filter_label">Cores:</span>
+    <span class="filter_buttons">
     {{#each colors}}
-      <div class="color {{selected_color}}">
+      <span class="color {{selected_color}}">
         {{text}} <span class="count">({{count}})</span>
-      </div>
+      </span>
     {{/each}}
-    </div>
+    </span>
+  </div>
 
-    <div id="rarities">
-    {{#each rarities}}
-      <div class="rarity {{selected_rarity}}">
+  <div id="filter_type">
+    <span class="filter_label">Tipos:</span>
+    <span class="filter_buttons">
+    {{#each types}}
+      <span class="type {{selected_type}}">
         {{text}} <span class="count">({{count}})</span>
-      </div>
+      </span>
     {{/each}}
-    </div>
+    </span>
+  </div>
 
-    <div id="orderby" class="tag-list">
-      <div class="label">Ordenar:</div>
-    {{#each sorts}}
-      <div class="sort {{selected_sort}}">
-        {{text}}
-      </div>
-    {{/each}}
-    </div>
-
-    <div>
-      <div class="label">Mostrar:</div>
+  <div id="filter_order">
+    <span class="filter_label">Ordenar:</span>
+    <span class="filter_buttons">
+      {{#each sorts}}
+        <span class="sort {{selected_sort}}">
+          {{text}}
+        </span>
+      {{/each}}
+    </span>
+  </div>     
+  <div id="filter_misc">
+    <span class="filter_label">Mostrar:</span>
+    <span class="filter_buttons">
       <input class="check show_price" id="show_price" type="checkbox" {{{checked_show_price}}} /> Preço
       <input class="check show_img" id="show_img" type="checkbox" {{{checked_show_img}}} /> Imagem
-    </div>
+    </span>
   </div>
+</div>
+
+<div id="filter_misc">
+</div>
+
 </template>
