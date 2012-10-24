@@ -5,7 +5,15 @@
  * @created Sun Oct 21 06:34:10 BRST 2012
  */
 // if the database is empty on server start, create some sample data.
+
 Meteor.startup(function () {
+
+/*
+Pools.remove({});
+PoolCards.remove({});
+Cards.remove({});
+*/
+
 if (Cards.find().count() !== 0) {
     return;
 }
