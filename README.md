@@ -10,3 +10,5 @@ This project aims at raising the level of competition further by making it publi
 This was written in order to become more familiar with [MeteorJS](https://www.meteor.com/), an open source JavaScript web framework.
 
 Under the hood it uses [Node.js](https://nodejs.org/), [Backbone.js](http://backbonejs.org/), [MongoDB](https://www.mongodb.org/) and [jQuery](https://jquery.com/).
+
+It is currently hosted and available at [Meteor](http://meteor-magic.meteor.com).
