@@ -11,6 +11,6 @@ This was written in order to become more familiar with [MeteorJS](https://www.me
 
 Under the hood it uses [Node.js](https://nodejs.org/), [Backbone.js](http://backbonejs.org/), [MongoDB](https://www.mongodb.org/) and [jQuery](https://jquery.com/).
 
-It is currently hosted and available at [Meteor](http://meteor-magic.meteor.com).
+It is currently hosted at [Meteor](http://meteor-magic.meteor.com).
 
 PS: please, do not be too judgmental of the code, this was written in one crazy afternoon (pure fun!) ;)
